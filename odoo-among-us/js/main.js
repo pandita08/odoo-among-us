@@ -6,7 +6,7 @@ class OdooAmongUs {
         this.isHost = false;
         this.roomCode = null;
         this.currentTasks = [];
-        //this.initializeEventListeners();
+        this.initializeEventListeners();
     }
 
     initializeEventListeners() {
@@ -114,13 +114,5 @@ class OdooAmongUs {
 
 // Inicializar el juego cuando se carga la página
 document.addEventListener('DOMContentLoaded', () => {
-    console.log(🎮 DOM cargado, inicializando juego...');
     window.game = new OdooAmongUs();
-
-    // inicializar event listeners DESPUÉS de crear la instancia
-    try {
-        window.game.initializeEventListeners();
-        console.log('✅ Event listeners configurados correctamente');
-    } catch (error) {
-        console.error('❌ Error configurando event listeners:', error);
 }); 
