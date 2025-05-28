@@ -1,12 +1,17 @@
+// 🎮 ODOO AMONG US - Conexión con servidor multijugador
+const SERVER_URL = 'https://odoo-among-us-server-production.up.railway.app';
+let socket = null;
+let currentRoom = null;
+let playerName = null;
+
 class OdooAmongUs {
     constructor() {
-        this.gameState = 'menu'; // menu, lobby, playing, meeting, ended
+        this.gameState = 'menu';
         this.players = [];
         this.myPlayer = null;
         this.isHost = false;
         this.roomCode = null;
         this.currentTasks = [];
-        //this.initializeEventListeners();
     }
 
     initializeEventListeners() {
@@ -16,143 +21,198 @@ class OdooAmongUs {
         document.getElementById('closeModal').addEventListener('click', () => this.hideJoinModal());
     }
 
-    createGame() {
-        this.isHost = true;
-        this.roomCode = Math.floor(1000 + Math.random() * 9000).toString();
-        this.gameState = 'lobby';
-    
-    // Mostrar información de la sala creada
-    const message = `🎮 ¡Partida creada exitosamente!
+    connectToServer() {
+        if (socket && socket.connected) return;
+        
+        console.log('🔌 Conectando al servidor...', SERVER_URL);
+        socket = io(SERVER_URL);
+        
+        socket.on('connect', () => {
+            console.log('🔌 ¡Conectado al servidor multijugador!');
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('🔌 Desconectado del servidor');
+        });
+        
+        socket.on('connect_error', (error) => {
+            console.error('❌ Error de conexión:', error);
+            alert('❌ Error conectando al servidor. Verifica tu conexión.');
+        });
+        
+        socket.on('gameCreated', (data) => {
+            currentRoom = data.roomCode;
+            const message = `🎮 ¡Sala creada exitosamente!
 
-🔢 Código de sala: ${this.roomCode}
+🔢 Código de sala: ${data.roomCode}
+👥 Jugadores: ${data.players.length}/8
 
-👥 Comparte este código con tus compañeros para que se unan.
-
-📱 Para unirse, deben:
+📱 Para unirse, tus compañeros deben:
 1. Ir a: pandita08.github.io/odoo-among-us
-2. Hacer click en "Unirse a Partida" 
-3. Ingresar el código: ${this.roomCode}
+2. Click "Unirse a Partida"
+3. Ingresar código: ${data.roomCode}
 
-🎯 ¡Descubre quién está saboteando la empresa!
+🚀 ¡Multijugador real funcionando!
 
-(Sistema multijugador completo en desarrollo)`;
+Una vez que tengas mínimo 4 jugadores, podrás iniciar la partida.`;
 
-    alert(message);
-    console.log(`✅ Partida creada con código: ${this.roomCode}`);
-}
+            alert(message);
+        });
+        
+        socket.on('joinedGame', (data) => {
+            currentRoom = data.roomCode;
+            const hostName = data.players.find(p => p.isHost)?.name || 'el host';
+            const message = `✅ ¡Te uniste a la sala ${data.roomCode}!
 
-    joinGame() {
-        const code = document.getElementById('roomCode').value;
-        if (code.length !== 4) {
-            alert('Por favor ingresa un código de 4 dígitos');
-            return;
-        }
+👥 Jugadores en sala: ${data.players.length}/8
+⏳ Esperando que ${hostName} inicie la partida...
 
-        // Simular verificación de sala
-        if (this.verifyRoom(code)) {
-            this.roomCode = code;
-            this.gameState = 'lobby';
+🎮 ¡Conectado al servidor multijugador!
+
+Necesitan mínimo 4 jugadores para comenzar.`;
+
+            alert(message);
+            this.hideJoinModal();
+        });
+        
+        socket.on('joinError', (data) => {
+            alert(`❌ Error: ${data.message}`);
+        });
+        
+        socket.on('playerJoined', (data) => {
+            const newPlayer = data.newPlayer;
+            const playersCount = data.players.length;
             
-            const message = `✅ ¡Te has unido a la sala ${code}!
+            let message = `👋 ${newPlayer.name} se unió a la sala!
 
-⏳ Esperando que el host inicie la partida...
+👥 Jugadores: ${playersCount}/8`;
 
-🎮 Pronto podrás jugar con tus compañeros y descubrir quién sabotea la empresa.
+            if (playersCount >= 4) {
+                message += `\n\n🚀 Ya pueden iniciar la partida (mínimo alcanzado)`;
+            } else {
+                message += `\n\n⏳ Faltan ${4 - playersCount} jugadores para iniciar`;
+            }
 
-(Sistema multijugador completo en desarrollo)`;
+            alert(message);
+        });
+        
+        socket.on('playerLeft', (data) => {
+            const playersCount = data.players.length;
+            alert(`👋 Un jugador se desconectó
 
-    alert(message);
-    this.hideJoinModal();
-    console.log(`✅ Unido a partida: ${code}`);
-        } else {
-            alert('Código de sala inválido');
-        }
+👥 Jugadores: ${playersCount}/8`);
+        });
+        
+        socket.on('gameStarted', (data) => {
+            const roleDescriptions = {
+                'empleado': '👔 Empleado: Completa tareas y encuentra saboteadores',
+                'saboteador': '🔥 Saboteador: Elimina empleados sin ser descubierto',
+                'analista': '🔬 Analista: Ve estadísticas extra del equipo',
+                'tecnico': '🔧 Técnico: Repara sabotajes más rápido'
+            };
+            
+            const message = `🎮 ¡El juego ha comenzado!
+
+${roleDescriptions[data.role]}
+
+👥 Jugadores en partida: ${data.players.length}
+
+🎯 ¡Descubre quién sabotea la empresa!
+
+(Funcionalidades de juego completas en desarrollo)`;
+
+            alert(message);
+        });
+        
+        socket.on('error', (data) => {
+            alert(`❌ Error: ${data.message}`);
+        });
     }
 
-    verifyRoom(code) {
-        // Simulación simple - en una implementación real, esto verificaría contra un servidor
-        return code.length === 4 && /^\d+$/.test(code);
+    createGame() {
+        if (!playerName) {
+            playerName = prompt('¿Cuál es tu nombre?');
+            if (!playerName || playerName.trim() === '') {
+                alert('❌ Necesitas un nombre para jugar');
+                return;
+            }
+            playerName = playerName.trim();
+        }
+        
+        console.log('🚀 Creando partida para:', playerName);
+        this.connectToServer();
+        
+        // Dar tiempo para conectar
+        setTimeout(() => {
+            if (socket && socket.connected) {
+                socket.emit('createGame', { playerName: playerName });
+            } else {
+                alert('❌ Error conectando al servidor. Intenta de nuevo en unos segundos.');
+            }
+        }, 1000);
+    }
+
+    joinGame() {
+        const code = document.getElementById('roomCode').value.trim();
+        if (code.length !== 4) {
+            alert('❌ El código debe tener exactamente 4 dígitos');
+            return;
+        }
+        
+        if (!playerName) {
+            playerName = prompt('¿Cuál es tu nombre?');
+            if (!playerName || playerName.trim() === '') {
+                alert('❌ Necesitas un nombre para jugar');
+                return;
+            }
+            playerName = playerName.trim();
+        }
+        
+        console.log('🔗 Uniéndose a partida:', code, 'con nombre:', playerName);
+        this.connectToServer();
+        
+        // Dar tiempo para conectar
+        setTimeout(() => {
+            if (socket && socket.connected) {
+                socket.emit('joinGame', { 
+                    roomCode: code, 
+                    playerName: playerName 
+                });
+            } else {
+                alert('❌ Error conectando al servidor. Intenta de nuevo en unos segundos.');
+            }
+        }, 1000);
     }
 
     showJoinModal() {
         const modal = document.getElementById('joinModal');
         modal.style.display = 'flex';
+        
+        setTimeout(() => {
+            document.getElementById('roomCode').focus();
+        }, 100);
     }
 
     hideJoinModal() {
         const modal = document.getElementById('joinModal');
         modal.style.display = 'none';
-    }
-
-    redirectToLobby() {
-        window.location.href = `lobby.html?room=${this.roomCode}`;
-    }
-
-    startGame() {
-        if (!this.isHost) return;
-        
-        this.gameState = 'playing';
-        this.assignRoles();
-        this.assignTasks();
-        window.location.href = `game.html?room=${this.roomCode}`;
-    }
-
-    assignRoles() {
-        const totalPlayers = this.players.length;
-        const roles = [];
-
-        // Asignar saboteadores (1-2)
-        const numSaboteurs = totalPlayers <= 6 ? 1 : 2;
-        for (let i = 0; i < numSaboteurs; i++) {
-            roles.push('saboteador');
-        }
-
-        // Asignar roles especiales
-        roles.push('analista');
-        roles.push('tecnico');
-
-        // Llenar el resto con empleados
-        while (roles.length < totalPlayers) {
-            roles.push('empleado');
-        }
-
-        // Mezclar roles
-        for (let i = roles.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [roles[i], roles[j]] = [roles[j], roles[i]];
-        }
-
-        // Asignar roles a jugadores
-        this.players.forEach((player, index) => {
-            player.role = roles[index];
-        });
-    }
-
-    assignTasks() {
-        const taskTypes = ['ventas', 'contabilidad', 'rrhh', 'sistemas'];
-        this.players.forEach(player => {
-            if (player.role !== 'saboteador') {
-                player.tasks = taskTypes.map(type => ({
-                    type,
-                    completed: false
-                }));
-            }
-        });
+        document.getElementById('roomCode').value = '';
     }
 }
 
-// Inicializar el juego cuando se carga la página
+// Inicializar cuando se carga la página
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🎮 DOM cargado, inicializando juego...');
+    console.log('🎮 Inicializando Odoo Among Us Multijugador...');
+    console.log('🌐 Servidor:', SERVER_URL);
+    
     window.game = new OdooAmongUs();
     
-    // Inicializar event listeners DESPUÉS de crear la instancia
     setTimeout(() => {
         try {
             window.game.initializeEventListeners();
-            console.log('✅ Event listeners configurados correctamente');
+            console.log('✅ Juego listo - Conectará al servidor al crear/unirse');
         } catch (error) {
-            console.error('❌ Error configurando event listeners:', error);
+            console.error('❌ Error:', error);
         }
     }, 100);
 });
