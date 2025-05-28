@@ -42,6 +42,7 @@ class OdooAmongUs {
         
         socket.on('gameCreated', (data) => {
             currentRoom = data.roomCode;
+            this.isHost = true;
             const message = `🎮 ¡Sala creada exitosamente!
 
 🔢 Código de sala: ${data.roomCode}
@@ -54,13 +55,17 @@ class OdooAmongUs {
 
 🚀 ¡Multijugador real funcionando!
 
-Una vez que tengas mínimo 4 jugadores, podrás iniciar la partida.`;
+🎯 PARA INICIAR EL JUEGO:
+Una vez que tengas mínimo 4 jugadores, presiona F12 → Console y escribe:
+window.game.startGame()`;
 
             alert(message);
+            console.log('🎮 ERES EL HOST - Para iniciar la partida escribe: window.game.startGame()');
         });
         
         socket.on('joinedGame', (data) => {
             currentRoom = data.roomCode;
+            this.isHost = false;
             const hostName = data.players.find(p => p.isHost)?.name || 'el host';
             const message = `✅ ¡Te uniste a la sala ${data.roomCode}!
 
@@ -89,6 +94,9 @@ Necesitan mínimo 4 jugadores para comenzar.`;
 
             if (playersCount >= 4) {
                 message += `\n\n🚀 Ya pueden iniciar la partida (mínimo alcanzado)`;
+                if (this.isHost) {
+                    message += `\n\n💻 PARA INICIAR: Presiona F12 → Console → Escribe: window.game.startGame()`;
+                }
             } else {
                 message += `\n\n⏳ Faltan ${4 - playersCount} jugadores para iniciar`;
             }
@@ -197,6 +205,27 @@ ${roleDescriptions[data.role]}
         const modal = document.getElementById('joinModal');
         modal.style.display = 'none';
         document.getElementById('roomCode').value = '';
+    }
+
+    // 🚀 FUNCIÓN PARA INICIAR EL JUEGO (solo para el host)
+    startGame() {
+        if (!this.isHost) {
+            alert('❌ Solo el host puede iniciar la partida');
+            return;
+        }
+        
+        if (!socket || !socket.connected) {
+            alert('❌ No estás conectado al servidor');
+            return;
+        }
+        
+        if (!currentRoom) {
+            alert('❌ No estás en una sala');
+            return;
+        }
+        
+        console.log('🚀 Iniciando partida en sala:', currentRoom);
+        socket.emit('startGame');
     }
 }
 
