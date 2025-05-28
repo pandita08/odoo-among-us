@@ -20,8 +20,26 @@ class OdooAmongUs {
         this.isHost = true;
         this.roomCode = Math.floor(1000 + Math.random() * 9000).toString();
         this.gameState = 'lobby';
-        this.redirectToLobby();
-    }
+    
+    // Mostrar información de la sala creada
+    const message = `🎮 ¡Partida creada exitosamente!
+
+🔢 Código de sala: ${this.roomCode}
+
+👥 Comparte este código con tus compañeros para que se unan.
+
+📱 Para unirse, deben:
+1. Ir a: pandita08.github.io/odoo-among-us
+2. Hacer click en "Unirse a Partida" 
+3. Ingresar el código: ${this.roomCode}
+
+🎯 ¡Descubre quién está saboteando la empresa!
+
+(Sistema multijugador completo en desarrollo)`;
+
+    alert(message);
+    console.log(`✅ Partida creada con código: ${this.roomCode}`);
+}
 
     joinGame() {
         const code = document.getElementById('roomCode').value;
@@ -34,7 +52,18 @@ class OdooAmongUs {
         if (this.verifyRoom(code)) {
             this.roomCode = code;
             this.gameState = 'lobby';
-            this.redirectToLobby();
+            
+            const message = `✅ ¡Te has unido a la sala ${code}!
+
+⏳ Esperando que el host inicie la partida...
+
+🎮 Pronto podrás jugar con tus compañeros y descubrir quién sabotea la empresa.
+
+(Sistema multijugador completo en desarrollo)`;
+
+    alert(message);
+    this.hideJoinModal();
+    console.log(`✅ Unido a partida: ${code}`);
         } else {
             alert('Código de sala inválido');
         }
