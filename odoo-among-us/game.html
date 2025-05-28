@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego - Odoo Among Us</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/odoo-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- HUD del juego -->
+        <div class="game-hud">
+            <div class="task-list">
+                <h3>Tareas</h3>
+                <div id="tasksList"></div>
+            </div>
+            
+            <div class="player-info">
+                <div class="role-info">
+                    <span id="playerRole">Rol: Cargando...</span>
+                </div>
+                <div class="task-progress">
+                    <div class="progress-bar">
+                        <div id="taskProgress" class="progress-fill"></div>
+                    </div>
+                    <span id="taskPercentage">0%</span>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button id="reportButton" class="btn btn-danger">Reportar</button>
+                <button id="useButton" class="btn btn-primary">Usar</button>
+                <button id="sabotageButton" class="btn btn-secondary" style="display: none;">Sabotaje</button>
+            </div>
+        </div>
+
+        <!-- Modal de reunión -->
+        <div id="meetingModal" class="modal">
+            <div class="modal-content">
+                <h2>Reunión de Emergencia</h2>
+                <div class="meeting-timer">
+                    <span id="meetingTime">45</span>s
+                </div>
+                <div id="meetingPlayers" class="meeting-players">
+                    <!-- Los jugadores se agregarán dinámicamente aquí -->
+                </div>
+                <div class="meeting-chat">
+                    <div id="meetingMessages" class="chat-messages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="meetingInput" placeholder="Escribe un mensaje...">
+                        <button id="sendMeetingMessage" class="btn btn-primary">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de votación -->
+        <div id="votingModal" class="modal">
+            <div class="modal-content">
+                <h2>Votación</h2>
+                <div class="voting-timer">
+                    <span id="votingTime">30</span>s
+                </div>
+                <div id="votingPlayers" class="voting-players">
+                    <!-- Los jugadores se agregarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de tarea -->
+        <div id="taskModal" class="modal">
+            <div class="modal-content">
+                <h2 id="taskTitle">Tarea</h2>
+                <div id="taskContent">
+                    <!-- El contenido de la tarea se agregará dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/network.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/roles.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html> 

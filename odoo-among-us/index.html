@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odoo Among Us</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/odoo-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <div class="main-menu">
+            <div class="logo">
+                <h1>Odoo Among Us</h1>
+                <p>¿Quién está saboteando la empresa?</p>
+            </div>
+            
+            <div class="menu-buttons">
+                <button id="createGame" class="btn btn-primary">Crear Partida</button>
+                <button id="joinGame" class="btn btn-secondary">Unirse a Partida</button>
+            </div>
+
+            <div id="joinModal" class="modal">
+                <div class="modal-content">
+                    <h2>Unirse a Partida</h2>
+                    <input type="text" id="roomCode" maxlength="4" placeholder="Código de sala (4 dígitos)">
+                    <button id="joinRoom" class="btn btn-primary">Unirse</button>
+                    <button id="closeModal" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/network.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html> 

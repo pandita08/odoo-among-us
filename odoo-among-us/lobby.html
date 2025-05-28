@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby - Odoo Among Us</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/odoo-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <div class="lobby-container">
+            <div class="lobby-header">
+                <h1>Sala de Espera</h1>
+                <div class="room-code">
+                    <p>Código de sala:</p>
+                    <h2 id="roomCodeDisplay">----</h2>
+                </div>
+            </div>
+
+            <div class="player-list">
+                <h3>Jugadores (0/8)</h3>
+                <div id="playersList" class="players-grid">
+                    <!-- Los jugadores se agregarán dinámicamente aquí -->
+                </div>
+            </div>
+
+            <div class="lobby-controls">
+                <button id="startGame" class="btn btn-primary" style="display: none;">Iniciar Juego</button>
+                <button id="leaveLobby" class="btn btn-secondary">Salir</button>
+            </div>
+
+            <div class="lobby-chat">
+                <div id="chatMessages" class="chat-messages">
+                    <!-- Los mensajes se agregarán dinámicamente aquí -->
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Escribe un mensaje...">
+                    <button id="sendMessage" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/network.js"></script>
+    <script src="js/lobby.js"></script>
+</body>
+</html> 

@@ -1,0 +1,176 @@
+/* Estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+}
+
+/* Estilos del Lobby */
+.lobby-container {
+    background: var(--odoo-white);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 90%;
+    margin: 2rem auto;
+}
+
+.lobby-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.room-code {
+    margin: 1rem 0;
+}
+
+.room-code h2 {
+    color: var(--odoo-purple);
+    font-size: 2rem;
+    letter-spacing: 0.5rem;
+}
+
+.player-list {
+    margin-bottom: 2rem;
+}
+
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.player-slot {
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.player-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto 0.5rem;
+    background: var(--odoo-purple);
+}
+
+.player-name {
+    font-weight: 500;
+    color: var(--odoo-dark);
+}
+
+.lobby-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.lobby-chat {
+    background: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.chat-messages {
+    height: 200px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: var(--odoo-white);
+    border-radius: 0.5rem;
+}
+
+.chat-message {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: #f3f4f6;
+    border-radius: 0.25rem;
+}
+
+.chat-input {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chat-input input {
+    flex: 1;
+}
+
+/* Estilos del Juego */
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-map {
+    width: 100%;
+    height: 100%;
+    background: #f3f4f6;
+}
+
+.player {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.task {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: var(--odoo-purple);
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.task.completed {
+    background: var(--odoo-success);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .lobby-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .players-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    .player-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .chat-messages {
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lobby-controls {
+        flex-direction: column;
+    }
+
+    .chat-input {
+        flex-direction: column;
+    }
+
+    .chat-input button {
+        width: 100%;
+    }
+} 

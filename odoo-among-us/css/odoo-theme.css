@@ -1,0 +1,134 @@
+:root {
+    --odoo-purple: #7C3AED;
+    --odoo-white: #FFFFFF;
+    --odoo-gray: #6B7280;
+    --odoo-dark: #1F2937;
+    --odoo-success: #10B981;
+    --odoo-danger: #EF4444;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--odoo-white);
+    color: var(--odoo-dark);
+}
+
+.game-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--odoo-purple) 0%, #4C1D95 100%);
+}
+
+.main-menu {
+    background: var(--odoo-white);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.logo h1 {
+    color: var(--odoo-purple);
+    margin-bottom: 0.5rem;
+}
+
+.logo p {
+    color: var(--odoo-gray);
+    margin-bottom: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.btn-primary {
+    background-color: var(--odoo-purple);
+    color: var(--odoo-white);
+}
+
+.btn-primary:hover {
+    background-color: #6D28D9;
+}
+
+.btn-secondary {
+    background-color: var(--odoo-gray);
+    color: var(--odoo-white);
+}
+
+.btn-secondary:hover {
+    background-color: #4B5563;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--odoo-white);
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 400px;
+}
+
+.modal h2 {
+    color: var(--odoo-purple);
+    margin-bottom: 1rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    border: 2px solid var(--odoo-gray);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--odoo-purple);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-menu {
+        padding: 1.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-menu {
+        padding: 1rem;
+    }
+
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+} 
